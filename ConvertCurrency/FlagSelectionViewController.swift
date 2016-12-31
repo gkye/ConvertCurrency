@@ -14,7 +14,7 @@ enum SelectedFlagDirection{
 }
 
 protocol FlagSelectionDelegate: class {
-  func didSelect(direction: SelectedFlagDirection, value: enumArray)
+  func didSelect(_ direction: SelectedFlagDirection, value: enumArray)
 }
 
 class FlagSelectionViewController: UITableViewController{
@@ -23,12 +23,12 @@ class FlagSelectionViewController: UITableViewController{
   weak var delegate: FlagSelectionDelegate?
   
   override func viewDidLoad() {
-    let cancelBtn = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(dismiss(sender:)))
+    let cancelBtn = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action:#selector(FlagSelectionViewController.dismiss(_:)))
     navigationItem.leftBarButtonItem = cancelBtn
   }
   
   
-  func dismiss(sender: AnyObject){
+  func dismiss(_ sender: AnyObject){
     self.navigationController?.dismiss(animated: true, completion: nil)
   }
   override func numberOfSections(in tableView: UITableView) -> Int {
@@ -49,7 +49,8 @@ class FlagSelectionViewController: UITableViewController{
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     self.navigationController?.dismiss(animated: true, completion: {
-      self.delegate?.didSelect(direction: self.selectedFlag, value:  RatesEnumArray[indexPath.row])
+        
+      self.delegate?.didSelect(self.selectedFlag, value:  RatesEnumArray[indexPath.row])
     })
   }
 }

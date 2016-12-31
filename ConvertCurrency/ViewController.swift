@@ -67,19 +67,22 @@ class ViewController: UIViewController {
   }
   
   func loadData(){
-    Request.getRequest(base: requestBase){
-      if let _ = $0.json{
-        self.model = $0.0
-        self.json = $0.json
+    Request.getRequest(requestBase){ model, json in
+        if(model != nil){
+            self.model = model
+        }
+        if(json != nil){
+            self.json = json
+        }
         self.setLabels()
         self.calculateExchange()
-      }
+        
     }
   }
   
   //MARK: - Update labels
   func setLabels(){
-    if let cur = self.rightBaseCurrencyEnum.getRate(json: json["rates"]){
+    if let cur = self.rightBaseCurrencyEnum.getRate(json["rates"]){
       self.rightCurrency = cur
     }
     self.baseValue.text = "1 \(json["base"].string!) = \(rightCurrency.rate!) \(self.rightBaseCurrencyEnum.rawValue)"
@@ -109,7 +112,7 @@ class ViewController: UIViewController {
   
   //MARK: - IBAction
   
-  @IBAction func didSelectFlag(sender: UIButton){
+  @IBAction func didSelectFlag(_ sender: UIButton){
     let direction: SelectedFlagDirection
     if sender.tag == 0 {
       direction = .leftFlag
@@ -125,7 +128,7 @@ class ViewController: UIViewController {
 }
 
 extension ViewController: FlagSelectionDelegate{
-  func didSelect(direction: SelectedFlagDirection, value: enumArray) {
+  func didSelect(_ direction: SelectedFlagDirection, value: enumArray) {
     if direction == .leftFlag{
       requestBase = value.rateE.rawValue
       leftBaseCurrencyEnum = value.rateE
@@ -134,7 +137,7 @@ extension ViewController: FlagSelectionDelegate{
       if value.rateE == leftBaseCurrencyEnum{
         rightCurrency = (1, value.rateE.rawValue, "")
       }else{
-        rightCurrency = value.rateE.getRate(json: json["rates"])
+        rightCurrency = value.rateE.getRate(json["rates"])
       }
       rightBaseCurrencyEnum = value.rateE
       setLabels()

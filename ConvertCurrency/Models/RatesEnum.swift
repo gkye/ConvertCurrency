@@ -44,7 +44,7 @@ enum RatesEnum: String{
   case EUR
   case USD
   
-  func getRate(json: JSON)->RateBase?{
+  func getRate(_ json: JSON)->RateBase?{
     if let json = json[self.rawValue].double{
       return (json, self.rawValue, "")
     }else{
